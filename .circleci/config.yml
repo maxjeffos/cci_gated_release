@@ -1,0 +1,101 @@
+version: 2.1
+description: Test CCI conditionals
+
+jobs:
+  build:
+    machine:
+      image: ubuntu-2204:2022.07.1
+    working_directory: /home/circleci/test_cci_conditionals
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Do build
+          command: echo "Doing build"
+  
+  test:
+    machine:
+      image: ubuntu-2204:2022.07.1
+    working_directory: /home/circleci/test_cci_conditionals
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Do testing
+          command: echo "Doing testing"
+
+  prepare_release:
+    machine:
+      image: ubuntu-2204:2022.07.1
+    working_directory: /home/circleci/test_cci_conditionals
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Do Prepare Release
+          command: echo "Doing release preparation"
+
+  actual_release:
+    machine:
+      image: ubuntu-2204:2022.07.1
+    working_directory: /home/circleci/test_cci_conditionals
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Real Release Stuff
+          command: echo "Doing the actual release stuff that we only want to do for a real release."
+
+  approve_release:
+    machine:
+      image: ubuntu-2204:2022.07.1
+    working_directory: /home/circleci/test_cci_conditionals
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Use API to approve latest pending release
+          command: echo "Call API to approve latest pending release"
+
+workflows:
+  build_test_release:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build 
+      - prepare_release:
+          requires:
+            - test
+      - should-release:
+          name: Release?
+          type: approval
+          requires:
+            - prepare_release
+      - actual_release:
+          requires:
+            - Release?
+          filters:
+            branches:
+              only:
+                - main
+
+  auto_approve:
+    when:
+      and:
+        - equal: [ "main", << pipeline.git.branch >> ]
+        - equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]  # these are built-in names
+        - equal: [ "my-scheduled-release", << pipeline.schedule.name >> ]
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - prepare_release:
+          requires:
+            - test
