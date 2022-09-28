@@ -66,6 +66,11 @@ jobs:
       - run:
           name: Use API to approve latest pending release
           command: echo "Call API to approve latest pending release"
+      - run:
+          name: Show params
+          command: |
+            echo << pipeline.id >>
+            curl --request GET --url "https://circleci.com/api/v2/pipeline/<< pipeline.id >>/workflow"
 
 workflows:
   build_test_release:
