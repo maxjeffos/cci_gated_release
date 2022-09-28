@@ -13,6 +13,9 @@ jobs:
       - run:
           name: Do build
           command: echo "Doing build"
+      - run:
+          name: Show params
+          command: echo << pipeline.id >>
   
   test:
     machine:
