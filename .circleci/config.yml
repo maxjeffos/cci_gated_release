@@ -26,7 +26,8 @@ jobs:
           name: Show pipelines
           command: |
             echo << pipeline.id >>
-            curl --request GET --url 'https://circleci.com/api/v2/pipeline?org-slug=gh/maxjeffos'
+            curl --request GET --url 'https://circleci.com/api/v2/pipeline'
+            # curl --request GET --url 'https://circleci.com/api/v2/pipeline?org-slug=gh/maxjeffos'
   
   test:
     machine:
