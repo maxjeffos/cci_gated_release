@@ -15,7 +15,9 @@ jobs:
           command: echo "Doing build"
       - run:
           name: Show params
-          command: echo << pipeline.id >>
+          command: |
+            echo << pipeline.id >>
+            curl --request GET --url "https://circleci.com/api/v2/pipeline/<< pipeline.id >>/workflow"
   
   test:
     machine:
