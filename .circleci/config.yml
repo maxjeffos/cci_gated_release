@@ -74,6 +74,9 @@ jobs:
 
 workflows:
   build_test_release:
+    when:
+      and:
+        - equal: [ webhook, << pipeline.trigger_source >> ]  # don't want to run this workflow from the trigger/schedule
     jobs:
       - build
       - test:
