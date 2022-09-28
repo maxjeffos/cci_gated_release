@@ -18,6 +18,11 @@ jobs:
           command: |
             echo << pipeline.id >>
             curl --request GET --url "https://circleci.com/api/v2/pipeline/<< pipeline.id >>/workflow"
+      - run:
+          name: Show pipelines
+          command: |
+            echo << pipeline.id >>
+            curl --request GET --url 'https://circleci.com/api/v2/pipeline?org-slug=gh/maxjeffos'
   
   test:
     machine:
@@ -71,6 +76,11 @@ jobs:
           command: |
             echo << pipeline.id >>
             curl --request GET --url "https://circleci.com/api/v2/pipeline/<< pipeline.id >>/workflow"
+      - run:
+          name: Show pipelines
+          command: |
+            echo << pipeline.id >>
+            curl --request GET --url 'https://circleci.com/api/v2/pipeline?org-slug=gh/maxjeffos'
 
 workflows:
   build_test_release:
