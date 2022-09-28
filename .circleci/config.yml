@@ -95,10 +95,8 @@ workflows:
         - equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]  # these are built-in names
         - equal: [ "my-scheduled-release", << pipeline.schedule.name >> ]
     jobs:
-      - build
-      - test:
-          requires:
-            - build
-      - prepare_release:
-          requires:
-            - test
+      - approve_release:
+          filters:
+            branches:
+              only:
+                - main
